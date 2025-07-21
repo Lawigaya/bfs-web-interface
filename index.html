@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BFS Graph Traversal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    textarea, input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    button {
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Breadth-First Search (BFS) Web Interface</h2>
+
+  <p><strong>Enter Graph as Adjacency List (JSON format):</strong></p>
+  <textarea id="graphInput">
+{
+  "A": ["B", "C"],
+  "B": ["D", "E"],
+  "C": ["F"],
+  "D": [],
+  "E": ["F"],
+  "F": []
+}
+  </textarea>
+
+  <p><strong>Start Node:</strong></p>
+  <input type="text" id="startNode" value="A">
+
+  <button onclick="runBFS()">Run BFS</button>
+
+  <div id="output"></div>
+
+  <script>
+    function runBFS() {
+      const graphText = document.getElementById('graphInput').value;
+      const start = document.getElementById('startNode').value.trim();
+      const output = document.getElementById('output');
+
+      try {
+        const graph = JSON.parse(graphText);
+
+        if (!graph[start]) {
+          output.innerText = 'Start node not found in graph.';
+          return;
+        }
+
+        const visited = new Set();
+        const queue = [start];
+        const result = [];
+
+        while (queue.length > 0) {
+          const node = queue.shift();
+
+          if (!visited.has(node)) {
+            visited.add(node);
+            result.push(node);
+
+            const neighbors = graph[node] || [];
+            for (let neighbor of neighbors) {
+              if (!visited.has(neighbor)) {
+                queue.push(neighbor);
+              }
+            }
+          }
+        }
+
+        output.innerText = 'BFS Order: ' + result.join(' → ');
+      } catch (error) {
+        output.innerText = '❌ Invalid input. Please enter valid JSON.';
+      }
+    }
+  </script>
+
+</body>
+</html>
